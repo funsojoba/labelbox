@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=CORE.settings
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    networks:
+      - labelbox_network
+    env_file:
+      - .env
+
+  db:
+    image: postgis/postgis:13-3.1
+    container_name: labelbox_postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASS}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - labelbox_network
+
+
+networks:
+  labelbox_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
