@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from .models import Task
 from rest_framework import viewsets
-from .serializers import TaskSerializer
+from .serializers import TaskSerializer, GetTaskSerializer
 
 from .utils import CloudinaryManager
 
@@ -19,7 +19,7 @@ class TaskViewSet(viewsets.ViewSet):
     
     def get(self, request):
         tasks = Task.objects.all()
-        serializer = TaskSerializer(tasks, many=True)
+        serializer = GetTaskSerializer(tasks, many=True)
         return Response(serializer.data)
     
     
@@ -30,7 +30,7 @@ class TaskViewSet(viewsets.ViewSet):
     )
     def retrieve(self, request, pk=None):
         task = Task.objects.get(id=pk)
-        serializer = TaskSerializer(task)
+        serializer = GetTaskSerializer(task)
         return Response(serializer.data)
     
     
@@ -48,10 +48,7 @@ class TaskViewSet(viewsets.ViewSet):
             description = request.data['description']
             
             image_url = CloudinaryManager.upload_image(image, 'images')
-            
-            print("*************")
-            print(image_url)
-            
+        
             task = Task(
                 name=name, 
                 description=description, 
