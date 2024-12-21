@@ -6,6 +6,8 @@ from .models import Task
 from rest_framework import viewsets
 from .serializers import TaskSerializer
 
+from .utils import CloudinaryManager
+
 
 
 class TaskViewSet(viewsets.ViewSet):
@@ -41,6 +43,21 @@ class TaskViewSet(viewsets.ViewSet):
     def create(self, request):
         serializer = TaskSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            image = request.data['image']
+            name = request.data['name']
+            description = request.data['description']
+            
+            image_url = CloudinaryManager.upload_image(image, 'images')
+            
+            print("*************")
+            print(image_url)
+            
+            task = Task(
+                name=name, 
+                description=description, 
+                image=image_url)
+            task.save()
+            
+            serializer = TaskSerializer(task)
+            return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
