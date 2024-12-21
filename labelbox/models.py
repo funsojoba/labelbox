@@ -11,6 +11,8 @@ class Task(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     image = models.URLField()
+    annotations = models.JSONField(null=True, blank=True)  # New field for annotations
+    
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='PENDING')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

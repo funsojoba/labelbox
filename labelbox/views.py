@@ -46,11 +46,13 @@ class TaskViewSet(viewsets.ViewSet):
             image = request.data['image']
             name = request.data['name']
             description = request.data['description']
+            annotations = request.data.get("annotations", None)
             
             image_url = CloudinaryManager.upload_image(image, 'images')
         
             task = Task(
                 name=name, 
+                annotations=annotations,
                 description=description, 
                 image=image_url)
             task.save()

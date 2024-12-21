@@ -4,6 +4,7 @@ from .models import Task
 class TaskSerializer(serializers.Serializer):
     image = serializers.FileField()
     name = serializers.CharField()
+    annotations = serializers.JSONField()
     description = serializers.CharField()
     
 
